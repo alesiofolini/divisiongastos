@@ -1,0 +1,11 @@
+CACHE MANIFEST
+# 2016-11-18 v1.0.0
+index.html
+http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js
+https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js
+https://fonts.googleapis.com/icon?family=Material+Icons
+https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css
+https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js
+divisiongastosangularjs.js
+fastclick.js
+favicon.ico

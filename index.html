@@ -1,0 +1,343 @@
+<!DOCTYPE HTML>
+<html>
+<head manifest="cache.appcache">
+	<meta charset="UTF-8">
+	<title>División de gastos</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Web app para dividir gastos entre amigos.">
+	<meta name="keywords" content="division,gastos,dividir,compras,comida,compra,compartir">
+	<meta name="author" content="Alesio Folini">
+	
+	<link rel="icon" href="favicon.ico" type="image/gif">
+	
+	<!-- Para hacer fullscreen -->
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	
+	<!-- AngularJS -->
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	
+	<!-- FastClick -->
+	<script src="fastclick.js"></script>
+	
+	<!-- JQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	
+	<!-- Materialize Icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	
+	<!-- Materialize Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+
+	<!-- Materialize Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+	
+	<!-- AngulaJs App -->
+	<script src="divisiongastosangularjs.js"></script>
+	
+	<style>
+		body {
+			display: flex;
+			min-height: 100vh;
+			flex-direction: column;
+		 }
+		 main {
+			flex: 1 0 auto;
+			min-height: 50vh;
+		 }
+		 .success{
+			color:lightgreen;
+		 }
+		 .error{
+			background-color:red;
+			color:white;
+		 }
+		 .info{
+			background-color:blue;
+		 }
+		 #adsense{
+			max-height:0px;
+			height:0px;
+		 }
+		 .errorSelect{
+			border:solid 1px red;
+		 }
+		 .tabs .indicator{
+			background-color:white;
+		 }
+	</style>
+			 
+</head>
+<body ng-app="app" ng-controller="mainController">
+	<div id="divPageLoader" class="center" style="padding-top:50%;">
+		<div class="preloader-wrapper big active">
+			<div class="spinner-layer spinner-blue">
+				<div class="circle-clipper left">
+					<div class="circle"></div>
+				</div>
+				<div class="gap-patch">
+					<div class="circle"></div>
+				</div>
+				<div class="circle-clipper right">
+					<div class="circle"></div>
+				</div>
+			</div>
+	
+			<div class="spinner-layer spinner-red">
+				<div class="circle-clipper left">
+					<div class="circle"></div>
+				</div>
+				<div class="gap-patch">
+					<div class="circle"></div>
+				</div>
+				<div class="circle-clipper right">
+					<div class="circle"></div>
+				</div>
+			</div>
+	
+			<div class="spinner-layer spinner-yellow">
+				<div class="circle-clipper left">
+					<div class="circle"></div>
+				</div>
+				<div class="gap-patch">
+					<div class="circle"></div>
+				</div>
+				<div class="circle-clipper right">
+					<div class="circle"></div>
+				</div>
+			</div>
+	
+			<div class="spinner-layer spinner-green">
+				<div class="circle-clipper left">
+					<div class="circle"></div>
+				</div>
+				<div class="gap-patch">
+					<div class="circle"></div>
+				</div>
+				<div class="circle-clipper right">
+					<div class="circle"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="divPageContent">
+		<header>
+			<nav>
+				<div class="nav-wrapper green darken-4" style="padding-left:30px;">
+					<a href="#!" class="brand-logo col s6">División de gastos</a>
+					<a href="#" data-activates="slide-out" class="right button-collapse show-on-large" style="margin-right:10px"><i class="material-icons">more_vert</i></a>
+				</div>
+			</nav>
+			<div class="col s12">
+				<ul class="tabs green darken-2">
+					<li class="tab col s3"><a class="white-text tab-accent-white" href="#personas">Personas</a></li>
+					<li class="tab col s3"><a class="white-text tab-accent-white" href="#gastos">Gastos</a></li>
+					<li class="tab col s3"><a class="white-text tab-accent-white" href="#resultados">Resultados</a></li>
+				</ul>
+			</div>
+			<ul id="slide-out" class="side-nav right">
+				<li><div class="userView green">
+					<a href="#"><img id="userImg" class="circle" src=""></a>
+					<a href="#"><span id="userName"></span></a>
+				</div></li>
+				<li><a href="#" id="btnLogin" class="" ng-click="fbLogin()"><i class="material-icons">perm_identity</i>Ingresar con Facebook</a></li>
+				<li><a href="#" id="btnLogout" class="" ng-click="fbLogout()"><i class="material-icons">perm_identity</i>Salir</a></li>
+				<li><div class="divider"></div></li>
+				<li><!-- Modal Trigger --><a class="modal-trigger" href="#modalayuda"><i class="material-icons">live_help</i>Ayuda</a></li>
+			</ul>
+		</header>
+		<main>
+			<div class="row">
+				<div id="personas" class="col s12">
+					<div class="input-field col s12">
+						<input id="persona" type="text" maxlength="80" class="validate">
+						<label for="persona" data-error="{{errorPersona}}">Nombre</label>
+						<button class="waves-effect btn col s4 offset-s8" ng-click="agregarPersona()">Agregar</button>
+					</div>
+					<div id="divLogin" class="center">
+						<a href="#" id="btnLoginMain" class="waves-effect btn blue darken-4" ng-click="fbLogin()" style="margin-top:20px">Ingresar con Facebook</a>
+						<p>Ingresá con Facebook para guardar tus amigos</p>
+					</div>
+					<div id="divAmigos">
+						<div id="divAmigosLoader" class="center">
+							<div class="preloader-wrapper big active">
+								<div class="spinner-layer spinner-blue">
+									<div class="circle-clipper left">
+										<div class="circle"></div>
+									</div>
+									<div class="gap-patch">
+										<div class="circle"></div>
+									</div>
+									<div class="circle-clipper right">
+										<div class="circle"></div>
+									</div>
+								</div>
+		
+								<div class="spinner-layer spinner-red">
+									<div class="circle-clipper left">
+										<div class="circle"></div>
+									</div>
+									<div class="gap-patch">
+										<div class="circle"></div>
+									</div>
+									<div class="circle-clipper right">
+										<div class="circle"></div>
+									</div>
+								</div>
+		
+								<div class="spinner-layer spinner-yellow">
+									<div class="circle-clipper left">
+										<div class="circle"></div>
+									</div>
+									<div class="gap-patch">
+										<div class="circle"></div>
+									</div>
+									<div class="circle-clipper right">
+										<div class="circle"></div>
+									</div>
+								</div>
+		
+								<div class="spinner-layer spinner-green">
+									<div class="circle-clipper left">
+										<div class="circle"></div>
+									</div>
+									<div class="gap-patch">
+										<div class="circle"></div>
+									</div>
+									<div class="circle-clipper right">
+										<div class="circle"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="divAmigosTable">
+							<div class="input-field col s12">
+								<input id="buscar" type="text" class="validate" ng-model="buscar">
+								<label for="buscar">Buscar amigos</label>
+							</div>
+							<ul class="collection">
+								<li class="collection-item" ng-show="amigos.length == 0">
+									<span class="title">No tenés amigos guardados</span>
+								</li>
+								<li class="collection-item" ng-repeat="a in amigos | orderBy : 'nombre' | filter : buscar">
+									<span class="title">{{a.nombre}}</span>
+									<a href="#!" class="secondary-content red-text" ng-click="deleteAmigo(a)"><i class="material-icons">delete</i></a>
+									<a href="#!" class="" ng-click="amigoAPersonas(a.nombre)"><i class="material-icons">add</i></a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div id="gastos" class="col s12">
+					<div class="input-field col s12">
+						<select class="browser-default validate" ng-model="selectedPersona" ng-options="p.nombre for p in personas" id="selectPersonas"/>
+							<option value="" disabled selected>Quién compró:</option>
+						</select>
+						<!-- <label for="selectPersonas" data-error="{{errorSelect}}">Quién compró:</label> -->
+					</div>
+					<div class="input-field col s12">
+						<input type="text" class="validate autocomplete" maxlength="20" ng-model="cosa" id="cosa"/>
+						<label for="cosa" data-error="{{ errorCosa }}">Qué compraron:</label>
+					</div>
+					<div class="input-field col s12">
+						<input type="number" class="validate" min="0" max="10000" ng-model="costo" id="gasto" step="0.01"/>
+						<label for="gasto" data-error="{{ errorCosto }}">Cuánto costó:</label>
+					</div>
+					<button class="waves-effect btn col s4 offset-s8" ng-click="agregarGasto()">Agregar</button>
+					<div class="row">
+						<div class="col s12" ng-show="gastos.length != 0">
+							<ul class="collapsible" data-collapsible="expandable">
+								<li ng-repeat="g in gastos">
+									<div class="collapsible-header active teal lighten-5">
+										<strong>{{ g.persona.nombre }}</strong> compró <strong>{{ g.cosa.nombre }}</strong> a <strong>${{ g.cosa.costo }}</strong>
+										<a href="#" class="right teal-text" ng-click="deleteGasto(g)"><i class="material-icons">delete</i></a>
+									</div>
+									<div class="collapsible-body row">
+										<p>
+											<input type="checkbox" id="{{g.cosa.nombre}}" ng-click="checkTodos(g)" checked="checked">
+											<label for="{{g.cosa.nombre}}"><strong>Todos</strong></label>
+										</p>
+										<p ng-repeat="p in personas">
+											<input type="checkbox" id="{{p.nombre}}{{g.cosa.nombre}}" ng-click="editConsumo(g,p, true)" checked="checked">
+											<label for="{{p.nombre}}{{g.cosa.nombre}}">{{p.nombre}}</label>
+										</p>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div id="resultados" class="col s12">
+					<table class="bordered">
+						<thead>
+							<tr>
+								<th>Nombre</th>
+								<th>Saldo</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tr ng-show="personas.length == 0">
+							<td>Ingrese una persona</td>
+						</tr>
+						<tr ng-repeat="p in personas" class="">
+							<td><strong>{{ p.nombre }}</strong>: </td>
+							<td><strong  id="{{p.nombre}}">{{ p.mensajeSaldo }}</strong></td>
+							<td><a href="#" class="right red-text" ng-click="deletePersona(p)"><i class="material-icons">delete</i></a></td>
+						</tr>
+					</table>
+				</div>
+				<!-- Modal Structure -->
+				<div id="modalayuda" class="modal">
+					<div class="modal-content ">
+						<h4>Ayuda</h4>
+						<ol>
+							<li>Agregá los comensales.</li>
+							<li>Agregá cada compra indicando quién compró y cuánto gastó.</li>
+							<li>Marcá en la lista de gastos quién consumió cada cosa.</li>
+							<li>Listo! En la tab de Resultados vas a poder ver cuánto debe cada uno (O cuánto le deben).</li>
+						</ol>
+						<h5>Usar como app en tu celular</h5>
+						<ol>
+							<li>En el menú del navegador seleccioná la opción "Agregar a la pantalla principal".</li>
+							<li>Listo! En tu HomeScreen vas a ver un nuevo ícono para entrar directamente a la aplicación.</li>
+						</ol>
+					</div>
+					<div class="modal-footer">
+						<a href="#!" class=" modal-action modal-close waves-effect waves-green btn">OK</a>
+					</div>
+				</div>
+			</div>
+		</main>
+		<footer class="page-footer green darken-2">
+			<div class="center">
+			<div class="row">
+				<div class="">
+					<h5 class="white-text">Total gastado: ${{ total }}</h5>
+					<div class="fb-like" data-share="true" data-width="100" data-show-faces="true"></div>
+				</div>
+			</div>
+			</div>
+			<div class="footer-copyright green darken-4">
+			<div class="center-align">
+				© 2016 <a href="http://alesiofolini.com">Alesio Folini</a> - <a href="https://www.google.com.ar/maps/place/Rosario,+Santa+Fe/@-32.9522839,-60.7681979,12z/data=!3m1!4b1!4m5!3m4!1s0x95b6539335d7d75b:0xec4086e90258a557!8m2!3d-32.9442426!4d-60.6505388">Rosario, Santa Fe, Argentina</a>
+			</div>
+			</div>
+		</footer>
+	</div>
+	<div id="adsense">
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- adaptable -->
+		<ins class="adsbygoogle"
+			style="display:block"
+			data-ad-client="ca-pub-4022698425775766"
+			data-ad-slot="5885997538"
+			data-ad-format="auto"></ins>
+		<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</div>
+		
+<script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
+<script src="//connect.facebook.net/en_US/sdk.js"></script>
+</body>
+</html>
